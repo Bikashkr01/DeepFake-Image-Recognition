@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="static/styles2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Contact - Fake Image Detector</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo" />
+            </div>
+            <ul>
+                <li>
+                    <a href="/index.html">Home</a>
+                    <ul class="dropdown"> <!-- Changed from div to ul -->
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </li>
+               
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="contact">
+            <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+            <form id="contactForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+                <label for="message">Message:</label>
+                <textarea id="message" required></textarea>
+                <button type="submit"><i class="fas fa-paper-plane"></i> Send</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Fake Image Detector. All rights reserved.</p>
+    </footer>
+    <script src="static/script.js"></script>
+</body>
+</html>

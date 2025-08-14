@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Recognition</title>
+    <!-- <link rel="stylesheet" href="/static/styles3.css"> -->
+    <link rel="stylesheet" href="/static/styles4.css">
+    <!-- <link rel="stylesheet" href="/static/styles5.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo img {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover img {
+            transform: scale(1.05);
+        }
+        
+        ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        li {
+            position: relative;
+            margin: 0 1rem;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        a:hover {
+            color: #7b52b9;
+        }
+        
+        a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #7b52b9;
+            transition: width 0.3s ease;
+        }
+        
+        a:hover::after {
+            width: 100%;
+        }
+        
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        
+        li:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown li {
+            margin: 0;
+            padding: 0.5rem 1rem;
+        }
+        
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80') center/cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+            position: relative;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .des {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 600px;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+        
+        .btnflex {
+            animation: fadeInUp 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+        
+        .cssbuttons-io-button {
+            background: linear-gradient(135deg, #7b52b9 0%, #9b59b6 100%);
+            color: white;
+            font-family: inherit;
+            padding: 0.35em;
+            padding-left: 1.2em;
+            font-size: 17px;
+            font-weight: 500;
+            border-radius: 0.9em;
+            border: none;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(123, 82, 185, 0.3),
+                        inset 0 0 1.6em -0.6em #714da6;
+            overflow: hidden;
+            position: relative;
+            height: 2.8em;
+            padding-right: 3.3em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+        
+        .cssbuttons-io-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(123, 82, 185, 0.4);
+        }
+        
+        .cssbuttons-io-button:active {
+            transform: translateY(1px);
+        }
+        
+        .cssbuttons-io-button .icon {
+            background: white;
+            margin-left: 1em;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 2.2em;
+            width: 2.2em;
+            border-radius: 0.7em;
+            box-shadow: 0.1em 0.1em 0.6em 0.2em rgba(123, 82, 185, 0.3);
+            right: 0.3em;
+            transition: all 0.3s;
+        }
+        
+        .cssbuttons-io-button:hover .icon {
+            width: calc(100% - 0.6em);
+        }
+        
+        .cssbuttons-io-button .icon svg {
+            width: 1.1em;
+            transition: transform 0.3s;
+            color: #7b52b9;
+        }
+        
+        .cssbuttons-io-button:hover .icon svg {
+            transform: translateX(0.1em);
+        }
+        
+        .cssbuttons-io-button:active .icon {
+            transform: scale(0.95);
+        }
+        
+        .floating-icons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            color: rgba(123, 82, 185, 0.2);
+            font-size: 2rem;
+            animation: float 15s linear infinite;
+        }
+        
+        footer {
+            background: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            padding: 1.5rem;
+            color: #555;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .des {
+                font-size: 1rem;
+            }
+            
+            nav {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            ul {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo" />
+            </div>
+            <ul>
+                <li>
+                    <a href="/index.html">Home</a>
+                    <ul class="dropdown">
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="floating-icons">
+            <i class="fas fa-camera floating-icon" style="left: 10%; animation-delay: 0s;"></i>
+            <i class="fas fa-eye floating-icon" style="left: 25%; animation-delay: 2s;"></i>
+            <i class="fas fa-image floating-icon" style="left: 40%; animation-delay: 4s;"></i>
+            <i class="fas fa-search floating-icon" style="left: 55%; animation-delay: 6s;"></i>
+            <i class="fas fa-brain floating-icon" style="left: 70%; animation-delay: 8s;"></i>
+            <i class="fas fa-robot floating-icon" style="left: 85%; animation-delay: 10s;"></i>
+        </div>
+        
+        <h2>VisionIQ</h2>
+        <pre class="hero-sub1">Smarter Image Understanding
+            Harness AI to decode visuals. Identify objects, scenes, and concepts instantly.
+        </pre>
+
+        <div class="btnflex">
+            <button class="cssbuttons-io-button" onclick="window.location.href='test.html'">
+Try It Now
+                <div class="icon">
+                    <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
+                    </svg>
+                </div>
+            </button>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Image Recognition. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Add more floating icons dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const floatingIcons = document.querySelector('.floating-icons');
+            const icons = [
+                'fa-camera', 'fa-eye', 'fa-image', 'fa-search', 
+                'fa-brain', 'fa-robot', 'fa-microchip', 'fa-code',
+                'fa-chart-bar', 'fa-network-wired', 'fa-magic', 'fa-shield-alt'
+            ];
+            
+            for (let i = 0; i < 20; i++) {
+                const icon = document.createElement('i');
+                icon.className = `fas ${icons[Math.floor(Math.random() * icons.length)]} floating-icon`;
+                icon.style.left = `${Math.random() * 100}%`;
+                icon.style.top = `${Math.random() * 100}%`;
+                icon.style.fontSize = `${Math.random() * 2 + 1}rem`;
+                icon.style.animationDuration = `${Math.random() * 15 + 10}s`;
+                icon.style.animationDelay = `${Math.random() * 10}s`;
+                floatingIcons.appendChild(icon);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+/* Reset and Box Sizing */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Body Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+}
+/* Navigation Bar Styles */
+nav {
+    height: 60px;
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space between logo and menu */
+    align-items: center; /* Center items vertically */
+    background-color: #ffffff; /* Background color for navbar */
+    padding: 10px 20px; /* Add padding for spacing */
+}
+
+nav .logo img {
+    height: 60px; /* Set logo height */
+    padding-top: 5% ;
+}
+
+/* Main Menu Styles */
+nav ul {
+    list-style-type: none; /* Remove bullet points */
+    display: flex; /* Use flexbox for horizontal layout */
+    margin: 0; /* Remove default margin */
+}
+
+nav ul li {
+    position: relative; /* Position relative for dropdown positioning */
+    margin: 0 15px; /* Space between items */
+}
+
+nav ul li a {
+    text-decoration: none; /* Remove underline */
+    color: rgb(255, 255, 255); /* Text color for menu items */
+    padding: 10px 15px; /* Add padding for clickable area */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    padding-right: 50px;
+}
+
+nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Background color on hover */
+}
+
+/* Dropdown Styles */
+.dropdown {
+    display: none; /* Hide dropdown by default */
+    position: absolute; /* Position it below the Home link */
+    background-color: #ffffff; /* Background color for dropdown */
+    min-width: 120px; /* Minimum width of dropdown */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    z-index: 1; /* Ensure it appears above other elements */
+    border-radius: 15px;;
+}
+
+nav ul li:hover .dropdown {
+    display: block; /* Show dropdown on hover */
+}
+
+.dropdown li {
+    border-bottom: 1px solid #6e6a6a; /* Add a border between dropdown items */
+}
+
+.dropdown li:last-child {
+    border-bottom: none; /* Remove border for the last item */
+}
+
+.dropdown li a {
+    color: black; /* Text color for dropdown items */
+    padding: 12px 16px; /* Padding for dropdown items */
+    text-decoration: none; /* Remove underline */
+    display: block; /* Make items block elements */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.dropdown li a:hover {
+    background-color: #c3c1c1; /* Background color on hover */
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(to right, #007BFF, #0056b3);
+    color: #fff;
+    padding: 80px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin: 20px 20px 120px 20px;
+}
+
+.hero h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.des {
+    margin-bottom: 20px;
+    font-size: 1.2em; /* Slightly larger description text */
+}
+
+/* Features Section */
+.features {
+    padding: 40px 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent background for features */
+    border-radius: 8px;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+}
+
+.features h2 {
+    margin-bottom: 20px;
+    font-size: 2.5em; /* Increase font size for the heading */
+    color: #333; /* Darker color for better contrast */
+    font-weight: bold; /* Bold font for emphasis */
+    text-transform: uppercase; /* Uppercase for a strong impact */
+    letter-spacing: 1px; /* Slightly increase letter spacing */
+}
+
+.features ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0; /* Remove default padding */
+}
+
+.features li {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    flex: 1 1 200px; /* Responsive flex item */
+    max-width: 350px; /* Set a maximum width for symmetry */
+    height: 350px; /* Set a fixed height for symmetry */
+    display: flex; /* Use flexbox for centering content */
+    flex-direction: column; /* Stack content vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center; /* Center text within the box */
+}
+
+.features li:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+/* Feature Image Styles */
+.feature-icon {
+    width: 100%; /* Make the image fill the box */
+    height: 250px; /* Fixed height for images */
+    object-fit: cover; /* Maintain aspect ratio and cover the box */
+    border-radius: 5px; /* Rounded corners for images */
+    margin-bottom: 15px; /* Space between image and text */
+}
+
+/* Feature Text Styles */
+.features li h3 {
+    font-size: 1.5em; /* Font size for feature title */
+    color: #007BFF; /* Blue color for feature titles */
+    margin-bottom: 10px; /* Space below the title */
+    font-weight: bold; /* Bold font for emphasis */
+    transition: color 0.3s; /* Transition for hover effect */
+}
+
+.features li h3:hover {
+    color: #0056b3; /* Darker blue on hover */
+}
+
+.features li p {
+    font-size: 1em; /* Font size for feature description */
+    color: #000000; /* Black color for description text */
+    line-height: 1.5; /* Increase line height for readability */
+    margin: 0; /* Remove default margin */
+}
+
+/* Custom Text Styles */
+#text {
+    text-decoration: none;
+    font-size: 1.7rem;
+    font-weight: 600;
+    font-family: 'Times New Roman', Times, serif;
+    color: #000000;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+        align-items: flex-start; /* Align items to the start */
+    }
+
+    nav ul {
+        flex-direction: column; /* Stack menu items vertically */
+        width: 100%; /* Full width for menu */
+    }
+
+    nav ul li {
+        margin: 5px 0; /* Space between items */
+    }
+}
+
+
+
+
+
+/* Additional styles for classification page */
+.upload {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+#userQuery {
+    width: 100%;
+    padding: 12px;
+    margin: 15px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+#imagePreview img {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+.result-container {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+}
+.loading {
+    color: #2196F3;
+}
+.result-box {
+    background: #f8f9fa;
+    border-left: 4px solid #4CAF50;
+    padding: 15px;
+}
+.error-box {
+    background: #ffebee;
+    border-left: 4px solid #f44336;
+    padding: 15px;
+}

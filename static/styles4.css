@@ -1,0 +1,114 @@
+/* Reset and Box Sizing */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.des {
+    margin-bottom: 20px;
+    font-size: 1.2em; /* Slightly larger description text */
+}
+
+/* Features Section */
+.features {
+    padding: 40px 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent background for features */
+    border-radius: 8px;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+}
+
+.features h2 {
+    margin-bottom: 20px;
+    font-size: 2.5em; /* Increase font size for the heading */
+    color: #333; /* Darker color for better contrast */
+    font-weight: bold; /* Bold font for emphasis */
+    text-transform: uppercase; /* Uppercase for a strong impact */
+    letter-spacing: 1px; /* Slightly increase letter spacing */
+}
+
+.features ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0; /* Remove default padding */
+}
+
+.features li {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    flex: 1 1 200px; /* Responsive flex item */
+    max-width: 350px; /* Set a maximum width for symmetry */
+    height: 350px; /* Set a fixed height for symmetry */
+    display: flex; /* Use flexbox for centering content */
+    flex-direction: column; /* Stack content vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center; /* Center text within the box */
+}
+
+.features li:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+/* Feature Image Styles */
+.feature-icon {
+    width: 100%; /* Make the image fill the box */
+    height: 250px; /* Fixed height for images */
+    object-fit: cover; /* Maintain aspect ratio and cover the box */
+    border-radius: 5px; /* Rounded corners for images */
+    margin-bottom: 15px; /* Space between image and text */
+}
+
+/* Feature Text Styles */
+.features li h3 {
+    font-size: 1.5em; /* Font size for feature title */
+    color: #007BFF; /* Blue color for feature titles */
+    margin-bottom: 10px; /* Space below the title */
+    font-weight: bold; /* Bold font for emphasis */
+    transition: color 0.3s; /* Transition for hover effect */
+}
+
+.features li h3:hover {
+    color: #0056b3; /* Darker blue on hover */
+}
+
+.features li p {
+    font-size: 1em; /* Font size for feature description */
+    color: #000000; /* Black color for description text */
+    line-height: 1.5; /* Increase line height for readability */
+    margin: 0; /* Remove default margin */
+}
+
+/* Custom Text Styles */
+#text {
+    text-decoration: none;
+    font-size: 1.7rem;
+    font-weight: 600;
+    font-family: 'Times New Roman', Times, serif;
+    color: #000000;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+        align-items: flex-start; /* Align items to the start */
+    }
+
+    nav ul {
+        flex-direction: column; /* Stack menu items vertically */
+        width: 100%; /* Full width for menu */
+    }
+
+    nav ul li {
+        margin: 5px 0; /* Space between items */
+    }
+}

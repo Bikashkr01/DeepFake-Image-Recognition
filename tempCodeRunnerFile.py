@@ -1,0 +1,1 @@
+model = tf.keras.models.load_model('trained_deepseek_model.keras')

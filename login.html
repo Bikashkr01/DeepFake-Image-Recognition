@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    @keyframes dataStream {
+      0% {
+        transform: translateY(-200%);
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    @keyframes binaryRain {
+      0% {
+        transform: translateY(-45vh);
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0);
+        opacity: 0.9;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+      }
+      50% {
+        border-color: rgba(33, 150, 243, 0.5);
+      }
+      100% {
+        transform: scale(6);
+        opacity: 0;
+        border-color: rgba(33, 150, 243, 0);
+      }
+    }
+
+    @keyframes fadeInScale {
+      0% {
+        opacity: 0;
+        transform: perspective(1000px) scale(0.9) translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: perspective(1000px) scale(1) translateY(0);
+      }
+    }
+
+    @keyframes mouseNumberFloat {
+      0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, calc(-50% - 40px)) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+        transform: scale(1.05);
+        
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Roboto', sans-serif;
+      overflow: hidden;
+    }
+
+    .main-container {
+      height: 100vh;
+      width: 100vw;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .data-stream {
+      position: absolute;
+      width: 2px;
+      height: 150px;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(33, 150, 243, 0.6) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: dataStream 6s linear infinite;
+      box-shadow: 0 0 15px rgba(33, 150, 243, 0.3);
+    }
+
+    .binary-rain {
+      position: absolute;
+      color: rgba(33, 150, 243, 0.9);
+      font-family: monospace;
+      font-size: 14px;
+      font-weight: bold;
+      animation: binaryRain linear infinite;
+      pointer-events: none;
+      text-shadow: 0 0 8px rgba(33, 150, 243, 0.4);
+    }
+
+    .mouse-number {
+      color: rgba(33, 150, 243, 0.9);
+      font-family: monospace;
+      font-size: 16px;
+      font-weight: bold;
+      text-shadow: 0 0 8px rgba(33, 150, 243, 0.6);
+      animation: mouseNumberFloat 1s ease-out forwards;
+      position: fixed;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .click-ripple {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: ripple 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      pointer-events: none;
+      box-shadow: 0 0 20px rgba(33, 150, 243, 0.4),
+        inset 0 0 20px rgba(33, 150, 243, 0.4);
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #fff;
+      border-radius: 20px;
+      padding: 40px;
+      width: 400px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInScale 0.6s ease-out;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transform: perspective(1000px) rotateX(0deg);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .icons-container {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .icon {
+      width: 2rem;
+      height: 2rem;
+      color: #dbeafe;
+    }
+
+    .icon.pulse {
+      animation: pulse 1.5s infinite;
+    }
+
+    .icon.pulse-delay-1 {
+      animation-delay: 0.5s;
+    }
+
+    .icon.pulse-delay-2 {
+      animation-delay: 1s;
+    }
+
+    .title {
+      color: #fff;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.8);
+      font-size: 14px;
+    }
+
+    .form-container {
+      margin-top: 24px;
+      padding: 0 16px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 8px 8px 8px 40px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #fff;
+      color: #fff;
+      font-size: 1rem;
+      font-family: 'Roboto', sans-serif;
+      outline: none;
+    }
+
+    .input-field::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      cursor: pointer;
+    }
+
+
+
+ 
+
+    ::selection {
+      background: rgba(33, 150, 243, 0.4);
+      color: white;
+    }
+
+    .btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 12px;
+        overflow: hidden;
+        height: 3rem;
+        margin-left: 5%;
+        background-size: 300% 300%;
+        cursor: pointer;
+        backdrop-filter: blur(1rem);
+        border-radius: 5rem;
+        transition: 0.5s;
+        animation: gradient_301 5s ease infinite;
+        border: double 4px transparent;
+        background-image: linear-gradient(#212121, #212121),
+          linear-gradient(
+            137.48deg,
+            #ffdb3b 10%,
+            #fe53bb 45%,
+            #8f51ea 67%,
+            #0044ff 87%
+          );
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+      }
+      
+      #container-stars {
+        position: absolute;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        transition: 0.5s;
+        backdrop-filter: blur(1rem);
+        border-radius: 5rem;
+      }
+      
+      strong {
+        z-index: 2;
+        font-family: "Avalors Personal Use";
+        font-size: 20px;
+        letter-spacing: 2px;
+        color: #ffffff;
+
+      }
+      
+      #glow {
+        position: absolute;
+        display: flex;
+        width: 12rem;
+      }
+      
+      .circle {
+        width: 100%;
+        height: 30px;
+        filter: blur(2rem);
+        animation: pulse_3011 4s infinite;
+        z-index: -1;
+      }
+      
+      .circle:nth-of-type(1) {
+        background: rgba(254, 83, 186, 0.636);
+      }
+      
+      .circle:nth-of-type(2) {
+        background: rgba(142, 81, 234, 0.704);
+      }
+      
+      .btn:hover #container-stars {
+        z-index: 1;
+        background-color: #212121;
+      }
+      
+      .btn:hover {
+        transform: scale(1.1);
+      }
+      
+      .btn:active {
+        border: double 4px #fe53bb;
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+        animation: none;
+      }
+      
+      .btn:active .circle {
+        background: #fe53bb;
+      }
+      
+      #stars {
+        position: relative;
+        background: transparent;
+        width: 200rem;
+        height: 200rem;
+      }
+      
+      #stars::after {
+        content: "";
+        position: absolute;
+        top: -10rem;
+        left: -100rem;
+        width: 100%;
+        height: 100%;
+        animation: animStarRotate 90s linear infinite;
+      }
+      
+      #stars::after {
+        background-image: radial-gradient(#ffffff 1px, transparent 1%);
+        background-size: 50px 50px;
+      }
+      
+      #stars::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -50%;
+        width: 170%;
+        height: 500%;
+        animation: animStar 60s linear infinite;
+      }
+      
+      #stars::before {
+        background-image: radial-gradient(#ffffff 1px, transparent 1%);
+        background-size: 50px 50px;
+        opacity: 0.5;
+      }
+      
+      @keyframes animStar {
+        from {
+          transform: translateY(0);
+        }
+      
+        to {
+          transform: translateY(-135rem);
+        }
+      }
+      
+      @keyframes animStarRotate {
+        from {
+          transform: rotate(360deg);
+        }
+      
+        to {
+          transform: rotate(0);
+        }
+      }
+      
+      @keyframes gradient_301 {
+        0% {
+          background-position: 0% 50%;
+        }
+      
+        50% {
+          background-position: 100% 50%;
+        }
+      
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      
+      @keyframes pulse_3011 {
+        0% {
+          transform: scale(0.75);
+          box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+        }
+      
+        70% {
+          transform: scale(1);
+          box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+        }
+      
+        100% {
+          transform: scale(0.75);
+          box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+        }
+      }
+      
+  </style>
+</head>
+<body>
+  <div class="main-container" id="mainContainer">
+    <!-- Data Stream Effects will be added by JavaScript -->
+    
+    <!-- Mouse Numbers Effect will be added by JavaScript -->
+    
+    <!-- Click Ripples will be added by JavaScript -->
+    
+    <!-- Binary Rain Effect will be added by JavaScript -->
+    
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+      <!-- Logo and Title -->
+      <div class="header">
+        <div class="icons-container">
+            <svg class="icon pulse pulse-delay-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3.5" fill="none"/> <!-- Iris -->
+                <circle cx="12" cy="12" r="6" fill="none"/> <!-- Eye outline -->
+                <path d="M22 12c-2.667 4-7.333 6-10 6S4.667 16 2 12c2.667-4 7.333-6 10-6s7.333 2 10 6z"/> <!-- Eye curves -->
+                <path d="M12 2v1m0 18v1m9.9-14.9l-.7.7M4.1 19.9l-.7.7m16.5-.7l-.7-.7M4.1 4.1l-.7-.7"/> <!-- Neural connections -->
+              </svg>
+              <svg class="icon pulse pulse-delay-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="4" width="16" height="16" rx="1" fill="none"/> <!-- Main box -->
+                <rect x="8" y="8" width="8" height="8" rx="0.5" fill="none"/> <!-- Detected object -->
+                <path d="M12 16v2m0-12V4m4 12h2m-12-4H4m12-4h2m-12 0H4"/> <!-- AI processing lines -->
+                <circle cx="12" cy="12" r="0.5" fill="currentColor"/> <!-- Center dot -->
+              </svg>
+              
+
+          <svg class="icon pulse pulse-delay-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2" fill="none"/> <!-- Camera body -->
+            <circle cx="12" cy="12" r="4.5" fill="none"/> <!-- Lens -->
+            <circle cx="12" cy="12" r="2" fill="none"/> <!-- Inner lens -->
+            <path d="M19 7h1m-14 0H5m12-3v2m-8-2v2"/> <!-- Camera details -->
+            <path d="M16 12c0 2.5-1.5 4-4 4s-4-1.5-4-4 1.5-4 4-4 4 1.5 4 4z" stroke-dasharray="3,1"/> <!-- AI processing wave -->
+          </svg>
+        </div>
+        <h1 class="title">Login</h1>
+      </div>
+
+      <!-- Login Form -->
+      <form class="form-container" id="loginForm">
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          <input type="text" class="input-field" id="username" name="username" placeholder="Email ID" required>
+        </div>
+        
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <input type="password" class="input-field" id="password" name="password" placeholder="Password" required>
+          <span class="password-toggle" id="passwordToggle">
+            <!-- <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg> -->
+          </span>
+        </div>
+        
+        <!-- <button type="submit" class="login-button">
+          Log In
+        </button> -->
+        <button type="submit" class="btn login-button">
+            <strong>Login</strong>
+            <div id="container-stars">
+              <div id="stars"></div>
+            </div>
+          
+            <div id="glow">
+              <div class="circle"></div>
+              <div class="circle"></div>
+            </div>
+          </button>
+          
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Password toggle functionality
+      const passwordToggle = document.getElementById('passwordToggle');
+      const passwordInput = document.getElementById('password');
+      
+      passwordToggle.addEventListener('click', function() {
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          passwordToggle.innerHTML = `
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          `;
+        } else {
+          passwordInput.type = 'password';
+          passwordToggle.innerHTML = `
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          `;
+        }
+      });
+      
+      // Form submission
+      const loginForm = document.getElementById('loginForm');
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(loginForm);
+        const data = {
+          username: formData.get('username'),
+          password: formData.get('password')
+        };
+        console.log('Form submitted:', data);
+        if(data.password== "Bikash@123" && data.username == "BikashKr"){
+            window.location.href = "index.html";
+        }   else {
+            alert("Invalid username or password Try Again");
+        }
+    
+      });
+      
+      // Mouse move effects
+      const mouseNumbers = [];
+      const mainContainer = document.getElementById('mainContainer');
+      
+      mainContainer.addEventListener('mousemove', function(e) {
+        if (Math.random() > 0.5) {
+          const newNumber = {
+            x: e.clientX,
+            y: e.clientY,
+            value: Math.random().toString(2).slice(2, 6),
+            id: Date.now() + Math.random()
+          };
+          mouseNumbers.push(newNumber);
+          
+          const numberElement = document.createElement('div');
+          numberElement.className = 'mouse-number';
+          numberElement.textContent = newNumber.value;
+          numberElement.style.left = `${newNumber.x}px`;
+          numberElement.style.top = `${newNumber.y}px`;
+          mainContainer.appendChild(numberElement);
+          
+          setTimeout(() => {
+            numberElement.remove();
+          }, 1000);
+        }
+      });
+      
+      // Click ripples
+      const clickRipples = [];
+      
+      mainContainer.addEventListener('click', function(e) {
+        if (e.target === mainContainer) {
+          const newRipple = {
+            x: e.clientX,
+            y: e.clientY,
+            id: Date.now()
+          };
+          clickRipples.push(newRipple);
+          
+          const rippleElement = document.createElement('div');
+          rippleElement.className = 'click-ripple';
+          rippleElement.style.left = `${newRipple.x}px`;
+          rippleElement.style.top = `${newRipple.y}px`;
+          mainContainer.appendChild(rippleElement);
+          
+          setTimeout(() => {
+            rippleElement.remove();
+          }, 1500);
+        }
+      });
+      
+      // 3D tilt effect for login container
+      const loginContainer = document.getElementById('loginContainer');
+      
+      loginContainer.addEventListener('mousemove', function(e) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const rotateX = (y - rect.height / 2) / 70;
+        const rotateY = (x - rect.width / 2) / 70;
+        
+        e.currentTarget.style.transform = `perspective(1000px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
+        e.currentTarget.style.boxShadow = `
+          0 8px 32px rgba(0, 0, 0, 0.2),
+          ${rotateY / 2}px ${rotateX / 2}px 20px rgba(33,150,243,0.2)
+        `;
+      });
+      
+      loginContainer.addEventListener('mouseleave', function(e) {
+        e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.2)';
+      });
+      
+      // Binary rain effect
+      const binaryArray = Array.from({ length: 35 }, (_, i) => ({
+        id: `binary-${i}`,
+        left: `${Math.random() * 100}%`,
+        animationDuration: `${3 + Math.random() * 4}s`,
+        animationDelay: `${Math.random() * 2}s`,
+        value: Math.floor(Math.random() * 64).toString(2).padStart(6, '0')
+      }));
+      
+      binaryArray.forEach(binary => {
+        const binaryElement = document.createElement('div');
+        binaryElement.className = 'binary-rain';
+        binaryElement.textContent = binary.value;
+        binaryElement.style.left = binary.left;
+        binaryElement.style.animationDuration = binary.animationDuration;
+        binaryElement.style.animationDelay = binary.animationDelay;
+        mainContainer.appendChild(binaryElement);
+      });
+      
+      // Data stream effect
+      const dataStreamArray = Array.from({ length: 25 }, (_, i) => ({
+        id: `data_stream-${i}`,
+        left: `${(i * 100) / 20}%`,
+        top: `${(i * 100) / 20}%`,
+        animationDelay: `${i * 0.2}s`,
+        animationDuration: `${4 + Math.random() * 3}s`
+      }));
+      
+      dataStreamArray.forEach(dataStream => {
+        const streamElement = document.createElement('div');
+        streamElement.className = 'data-stream';
+        streamElement.style.left = dataStream.left;
+        streamElement.style.top = dataStream.top;
+        streamElement.style.animationDuration = dataStream.animationDuration;
+        streamElement.style.animationDelay = dataStream.animationDelay;
+        mainContainer.appendChild(streamElement);
+      });
+    });
+  </script>
+</body>
+</html>

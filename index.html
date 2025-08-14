@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Recognition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- <link rel="stylesheet" href="static/styles.css"> -->
+    <!-- <link rel="stylesheet" href="static/styles2.css"> -->
+    <link rel="stylesheet" href="static/styles3.css">
+    <link rel="stylesheet" href="static/styles4.css">
+    <link rel="stylesheet" href="static/styles5.css">
+</head>
+<body>
+    <div id="loader" class="loader"></div>
+    
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="classification.html" class="nav-link">VisionIQ</a></li>
+                <li><a href="fake.html" class="nav-link">FakeFinder</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="hero">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <h1 class="hero-title">Image Recognition</h1>
+              <pre class="hero-subtitle">With Image Recognition, just upload an image and let the magic happen! 
+Instantly get smart, spot-on answers, whether you’re identifying objects or exploring visuals.
+It’s fast, fun, and makes your chatbot smarter than ever!
+
+    Snap, ask, and get answers – instantly!</pre>
+              <a href="#features" class="cta-vision1">
+                <span>Explore Features</span>
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </section>
+
+        <section id="features" class="features">
+            <h2>Our Features</h2>
+            <div class="features-grid">
+                <a href="classification.html" class="card">
+                    <div class="cn">
+                      <div class="card-icon">
+                        <img src="images/classification.jpg" alt="Classification">
+                    </div>
+                    </div>
+                    <h3>VisionIQ</h3>
+                    <p>Categorize images with AI</p>
+                    <span>Try now <i class="fas fa-chevron-right"></i></span>
+                </a>
+                <a href="fake.html" class="card">
+                    <div class="cn"> 
+                      <div class="card-icon">
+                        <img src="images/fake_detector.png" alt="Fake Detector">
+                    </div>
+                    </div>
+                    <h3>FakeFinder</h3>
+                    <p>Identify manipulated images</p>
+                    <span>Try now <i class="fas fa-chevron-right"></i></span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Image Recognition</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            document.getElementById('loader').style.display = 'none';
+            document.querySelectorAll('.nav-link')[0].classList.add('active');
+            
+            // Mobile menu toggle
+            document.querySelector('.hamburger').addEventListener('click', () => {
+                document.querySelector('.nav-links').classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

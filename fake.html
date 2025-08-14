@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Authenticator</title>
+    <!-- <link rel="stylesheet" href="/static/styles3.css"> -->
+    <link rel="stylesheet" href="/static/styles4.css">
+    <!-- <link rel="stylesheet" href="/static/styles5.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --gray: #64748b;
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 50px rgba(0,0,0,0.2);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Highly Visible Background Animation */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+        
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(79,70,229,0.3) 0%, transparent 70%);
+            filter: blur(60px);
+            animation: float 15s linear infinite;
+            opacity: 0.8;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg) scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Strong Glow Effects */
+        .glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(79,70,229,0.4) 0%, transparent 70%);
+            filter: blur(100px);
+            z-index: -1;
+            animation: pulse 6s ease infinite;
+            opacity: 0.8;
+        }
+        
+        .glow-1 {
+            top: -300px;
+            right: -300px;
+            background: radial-gradient(circle, rgba(79,70,229,0.5) 0%, transparent 70%);
+        }
+        
+        .glow-2 {
+            bottom: -300px;
+            left: -300px;
+            background: radial-gradient(circle, rgba(16,185,129,0.4) 0%, transparent 70%);
+            animation-delay: 2s;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.3);
+                opacity: 0.9;
+            }
+        }
+        
+        /* Floating AI Elements - More Visible */
+        .ai-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .ai-element {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(79,70,229,0.3);
+            animation: floatElement 20s linear infinite;
+            text-shadow: 0 0 15px rgba(79,70,229,0.3);
+        }
+        
+        @keyframes floatElement {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg) scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            transition: var(--transition);
+        }
+        
+        .logo:hover img {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 15px rgba(79,70,229,0.4));
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            position: relative;
+        }
+        
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-md);
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
+            z-index: 10;
+        }
+        
+        .nav-links li:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown li {
+            padding: 0.5rem 1rem;
+            transition: var(--transition);
+        }
+        
+        .dropdown li:hover {
+            background: rgba(79,70,229,0.1);
+        }
+        
+        .dropdown a {
+            padding: 0;
+            color: var(--gray);
+        }
+        
+        .dropdown a:hover {
+            color: var(--primary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+        
+        .hero .des {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-light), var(--primary));
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            opacity: 1;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .btn i {
+            transition: var(--transition);
+        }
+        
+        .btn:hover i {
+            transform: translateX(5px);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+        }
+        
+        footer p {
+            opacity: 0.8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .dropdown {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: transparent;
+            }
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .des {
+                font-size: 1.1rem;
+            }
+            
+            .hero-content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .glow {
+                width: 400px;
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Highly Visible Background Animation -->
+    <div class="bg-animation" id="bgAnimation"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    
+    <!-- Floating AI Elements -->
+    <div class="ai-elements" id="aiElements"></div>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="AI Image Authenticator">
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="/index.html"><i class="fas fa-home"></i> Home</a>
+                    <ul class="dropdown">
+                        <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+                        <li><a href="#services"><i class="fas fa-cogs"></i> Services</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>FakeFinder</h2>
+            <p class="des">Trust What You See
+                Not sure if it's real?  Let AI investigate for you.
+            </p>
+            <a href="demo.html" class="btn">
+                Try It Now <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Image Recognition. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Create highly visible background circles
+        document.addEventListener('DOMContentLoaded', function() {
+            const bgAnimation = document.getElementById('bgAnimation');
+            const colors = [
+                'rgba(79,70,229,0.3)', 
+                'rgba(99,102,241,0.3)', 
+                'rgba(129,140,248,0.3)',
+                'rgba(16,185,129,0.3)'
+            ];
+            
+            for (let i = 0; i < 12; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('bg-circle');
+                
+                // Random properties with larger sizes
+                const size = Math.random() * 400 + 200;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const duration = Math.random() * 15 + 10;
+                const delay = Math.random() * 5;
+                
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                circle.style.left = `${posX}%`;
+                circle.style.top = `${posY}%`;
+                circle.style.background = color;
+                circle.style.animationDuration = `${duration}s`;
+                circle.style.animationDelay = `${delay}s`;
+                
+                bgAnimation.appendChild(circle);
+            }
+            
+            // Create floating AI elements
+            const aiElements = document.getElementById('aiElements');
+            const icons = ['fa-eye', 'fa-camera', 'fa-image', 'fa-brain', 'fa-robot', 'fa-microchip'];
+            
+            for (let i = 0; i < 15; i++) {
+                const element = document.createElement('i');
+                element.classList.add('fas', icons[Math.floor(Math.random() * icons.length)], 'ai-element');
+                
+                // Random properties with larger sizes
+                const size = Math.random() * 3 + 2;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                const opacity = Math.random() * 0.4 + 0.3;
+                
+                element.style.fontSize = `${size}rem`;
+                element.style.left = `${posX}%`;
+                element.style.top = `${posY}%`;
+                element.style.animationDuration = `${duration}s`;
+                element.style.animationDelay = `${delay}s`;
+                element.style.opacity = opacity;
+                
+                aiElements.appendChild(element);
+            }
+        });
+    </script>
+</body>
+</html>

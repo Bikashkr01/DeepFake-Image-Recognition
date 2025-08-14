@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Authenticator</title>
+    <link rel="stylesheet" href="/static/styles3.css">
+    <link rel="stylesheet" href="/static/styles4.css">
+    <link rel="stylesheet" href="/static/styles5.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --gray: #64748b;
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 50px rgba(0,0,0,0.2);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            transition: var(--transition);
+        }
+        
+        .logo:hover img {
+            transform: scale(1.05);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background: rgba(79,70,229,0.1);
+        }
+        
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .detection-container {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .detection-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+            text-align: center;
+        }
+        
+        .description {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        
+        /* Drag & Drop Area */
+        .drag-drop-area {
+            border: 2px dashed var(--primary-light);
+            border-radius: 1rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+            background: rgba(79,70,229,0.05);
+        }
+        
+        .drag-drop-area:hover {
+            border-color: var(--primary);
+            background: rgba(79,70,229,0.1);
+        }
+        
+        .drag-drop-area i {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .drag-drop-area p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        
+        /* Image Preview */
+        .preview-container {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .preview-container img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .image-meta {
+            margin-top: 0.5rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Detection Button */
+        .detect-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+        
+        .detect-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .detect-button:active {
+            transform: translateY(0);
+        }
+        
+        .detect-button i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Results Section */
+        .detection-results {
+            background: rgba(79,70,229,0.05);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        #predictionResult {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        #predictionResult i {
+            margin-right: 0.5rem;
+        }
+        
+        #predictionResult.fake {
+            color: #ef4444;
+        }
+        
+        #predictionResult.real {
+            color: #10b981;
+        }
+        
+        .confidence-meter {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .confidence-level {
+            height: 100%;
+            width: 0;
+            transition: width 1s ease;
+        }
+        
+        .confidence-level.fake {
+            background: linear-gradient(to right, #f87171, #ef4444);
+        }
+        
+        .confidence-level.real {
+            background: linear-gradient(to right, #34d399, #10b981);
+        }
+        
+        #confidenceText, #processingTime {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Subscription Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .subscription-modal {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 900px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .modal-overlay.active .subscription-modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .modal-header h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .modal-header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .plans-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        
+        .plan {
+            flex: 1;
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid #eee;
+            position: relative;
+        }
+        
+        .plan:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .plan.popular {
+            border-color: var(--primary);
+            background: #f5f3ff;
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .plan-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .plan-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .plan-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .plan-price span {
+            font-size: 16px;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        .plan-features {
+            margin-bottom: 25px;
+        }
+        
+        .plan-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .plan-feature i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .plan-feature .fa-check {
+            color: var(--secondary);
+        }
+        
+        .plan-feature .fa-times {
+            color: #ef4444;
+        }
+        
+        .plan-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .plan-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .plan-button.secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .plan-button.secondary:hover {
+            background: #f5f3ff;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .close-modal:hover {
+            color: #333;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .plans-container {
+                flex-direction: column;
+            }
+            
+            .plan {
+                width: 100%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .drag-drop-area {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="/images/logo.png" alt="Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="detection-container">
+            <h1>Fake Image Detection</h1>
+            <div class="description">
+                <p>Upload an image to check its authenticity is it fake or real using our model</p>
+            </div>
+            
+            <div id="dragDropArea" class="drag-drop-area">
+                <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                <p>Drag & drop image here or click to browse</p>
+                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+            </div>
+            
+            <div id="imagePreview" class="preview-container"></div>
+            
+            <button id="detectBtn" class="detect-button">
+                <i class="fas fa-search"></i> Detect Fake Image
+            </button>
+            
+            <div id="result" class="detection-results">
+                <div id="predictionResult"></div>
+                <div class="confidence-meter">
+                    <div id="confidenceLevel" class="confidence-level"></div>
+                </div>
+                <div id="confidenceText"></div>
+                <div id="processingTime"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Subscription Modal -->
+    <div id="subscriptionModal" class="modal-overlay">
+        <div class="subscription-modal">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <div class="modal-header">
+                <h2>Upgrade Your Plan</h2>
+                <p>You've used your free searches. Choose a plan to continue using our service</p>
+            </div>
+            
+            <div class="plans-container">
+                <!-- Free Plan -->
+                <div class="plan">
+                    <div class="plan-header">
+                        <div class="plan-name">Free</div>
+                        <div class="plan-price">₹0 <span>/ day</span></div>
+                    </div>
+                    <div class="plan-features">
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> 3 searches per day
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> Basic detection
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> Standard accuracy
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-times"></i> No priority processing
+                        </div>
+                    </div>
+                    <button class="plan-button secondary" onclick="selectPlan('free')">
+                        Choose Free Plan
+                    </button>
+                </div>
+                
+                <!-- Standard Plan -->
+                <div class="plan popular">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="plan-header">
+                        <div class="plan-name">Standard</div>
+                        <div class="plan-price">₹99 <span>/ week</span></div>
+                    </div>
+                    <div class="plan-features">
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> 15 searches per day
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> Advanced detection
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> Higher accuracy
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> Faster processing
+                        </div>
+                    </div>
+                    <button class="plan-button" onclick="selectPlan('standard')">
+                        Choose Standard Plan
+                    </button>
+                </div>
+                
+                <!-- Premium Plan -->
+                <div class="plan">
+                    <div class="plan-header">
+                        <div class="plan-name">Premium</div>
+                        <div class="plan-price">₹499 <span>/ month</span></div>
+                    </div>
+                    <div class="plan-features">
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> 30 searches per day
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> Premium detection
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> Highest accuracy
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> Instant processing
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i> Detailed reports
+                        </div>
+                    </div>
+                    <button class="plan-button" onclick="selectPlan('premium')">
+                        Choose Premium Plan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global detection count
+        let detectionCount = 0;
+        
+        // DOM Elements
+        const fileInput = document.getElementById('imageUpload');
+        const detectBtn = document.getElementById('detectBtn');
+        const dragDropArea = document.getElementById('dragDropArea');
+        const imagePreview = document.getElementById('imagePreview');
+        const predictionResult = document.getElementById('predictionResult');
+        const confidenceLevel = document.getElementById('confidenceLevel');
+        const confidenceText = document.getElementById('confidenceText');
+        const processingTime = document.getElementById('processingTime');
+        const resultContainer = document.getElementById('result');
+        const subscriptionModal = document.getElementById('subscriptionModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up event listeners
+            setupEventListeners();
+        });
+        
+        function setupEventListeners() {
+            // Drag and drop area
+            dragDropArea.addEventListener('click', () => fileInput.click());
+            dragDropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dragDropArea.classList.add('dragover');
+            });
+            dragDropArea.addEventListener('dragleave', () => {
+                dragDropArea.classList.remove('dragover');
+            });
+            dragDropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dragDropArea.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    displayImagePreview(e.dataTransfer.files[0]);
+                }
+            });
+            
+            // File input
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    displayImagePreview(this.files[0]);
+                }
+            });
+            
+            // Detect button
+            detectBtn.addEventListener('click', function() {
+                if (!fileInput.files.length) {
+                    showError('Please upload an image first');
+                    return;
+                }
+                detectFakeImage(fileInput.files[0]);
+            });
+            
+            // Modal close button
+            closeModal.addEventListener('click', () => {
+                subscriptionModal.classList.remove('active');
+            });
+            
+            // Close modal when clicking outside
+            subscriptionModal.addEventListener('click', (e) => {
+                if (e.target === subscriptionModal) {
+                    subscriptionModal.classList.remove('active');
+                }
+            });
+        }
+        
+        function displayImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview">
+                    <div class="image-meta">${file.name} (${(file.size/1024).toFixed(1)}KB)</div>
+                `;
+                imagePreview.style.display = 'block';
+                resetResults();
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        async function detectFakeImage(file) {
+            // Show loading state
+            predictionResult.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing image...';
+            confidenceLevel.style.width = '0%';
+            resultContainer.style.display = 'block';
+            
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const startTime = performance.now();
+                
+                // Simulate API call (replace with your actual fetch call)
+                // const response = await fetch('/predict', {
+                //     method: 'POST',
+                //     body: formData
+                // });
+                // if (!response.ok) throw new Error('Network response was not ok');
+                // const data = await response.json();
+                
+                // For demo purposes - simulate API response
+                const data = await simulateApiCall(file);
+                const endTime = performance.now();
+                
+                displayResults(data, (endTime - startTime).toFixed(0));
+                
+                // Increment detection count
+                detectionCount++;
+                console.log('Detection count:', detectionCount);
+                
+                // Show subscription modal after 3 detections
+                if (detectionCount >= 3) {
+                    setTimeout(() => {
+                        subscriptionModal.classList.add('active');
+                    }, 1000);
+                }
+                
+            } catch (error) {
+                showError(error.message);
+                console.error('Detection error:', error);
+            }
+        }
+        
+        // Simulate API call for demo purposes
+        function simulateApiCall(file) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // Random result for demo
+                    const isFake = Math.random() > 0.5;
+                    const confidence = Math.floor(Math.random() * 30) + 70; // 70-100%
+                    resolve({
+                        result: isFake ? 'Fake' : 'Real',
+                        confidence: confidence
+                    });
+                }, 1500);
+            });
+        }
+        
+        function displayResults(data, timeMs) {
+            const isFake = data.result === 'Fake';
+            const confidence = data.confidence;
+            
+            // Update prediction
+            predictionResult.innerHTML = `
+                <i class="fas ${isFake ? 'fa-times-circle' : 'fa-check-circle'}"></i>
+                ${isFake ? 'Fake Image Detected' : 'Real Image'}
+            `;
+            predictionResult.className = isFake ? 'fake' : 'real';
+            
+            // Update confidence meter
+            confidenceLevel.className = isFake ? 'confidence-level fake' : 'confidence-level real';
+            setTimeout(() => {
+                confidenceLevel.style.width = `${confidence}%`;
+            }, 100);
+            
+            // Update text
+            confidenceText.innerHTML = `Confidence: ${confidence}%`;
+            processingTime.innerHTML = `Processed in ${timeMs}ms`;
+        }
+        
+        function resetResults() {
+            predictionResult.innerHTML = '';
+            predictionResult.className = '';
+            confidenceLevel.style.width = '0%';
+            confidenceLevel.className = 'confidence-level';
+            confidenceText.innerHTML = '';
+            processingTime.innerHTML = '';
+            resultContainer.style.display = 'none';
+        }
+        
+        function showError(message) {
+            predictionResult.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            predictionResult.className = 'error';
+            resultContainer.style.display = 'block';
+        }
+        
+        function selectPlan(plan) {
+            alert(`You selected the ${plan} plan!`);
+            subscriptionModal.classList.remove('active');
+            // Here you would typically redirect to payment page or process the subscription
+            // Reset counter if they choose a paid plan
+            if (plan !== 'free') {
+                detectionCount = 0;
+            }
+        }
+    </script>
+</body>
+</html>

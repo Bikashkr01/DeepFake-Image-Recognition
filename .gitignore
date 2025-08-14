@@ -1,0 +1,6 @@
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+*.ipy*
+
+# Ignore Train folder
+Train/
